@@ -17,9 +17,13 @@ public class Controller {
 		//Sort sort = new RadixSort();
 //		Sort sort = new InsertionSort();
 		//Sort sort = new BubbleSort2(arr);
-		Sort sort = new InsertionSort2(arr);
+		//Sort sort = new InsertionSort2(arr);
 		//Sort sort = new MaxHeapSort2();
 		//Sort sort = new MergeSort2(arr);
+		//Sort sort = new MaxHeapSort2(arr);
+		//Sort sort = new MergeSort2(arr);
+		//Sort sort = new QuickSort2(arr);
+		Sort sort = new RadixSort2(arr);
 		
 		sort.sort(null, 0, arr.length);
 		System.out.println("after");

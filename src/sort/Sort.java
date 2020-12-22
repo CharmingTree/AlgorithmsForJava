@@ -9,6 +9,8 @@ public abstract class Sort
 	public Sort(int[] plist) 
 	{
 		this.list = plist;
+		
+		this.sorted = new int[(list.length)];
 	}
 	
 	abstract public void sort(int[] arr, int start, int end);
