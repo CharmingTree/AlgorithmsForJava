@@ -23,7 +23,8 @@ public class Controller {
 		//Sort sort = new MaxHeapSort2(arr);
 		//Sort sort = new MergeSort2(arr);
 		//Sort sort = new QuickSort2(arr);
-		Sort sort = new RadixSort2(arr);
+		//Sort sort = new RadixSort2(arr);
+		Sort sort = new MinHeapSort(arr);
 		
 		sort.sort(null, 0, arr.length);
 		System.out.println("after");

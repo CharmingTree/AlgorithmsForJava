@@ -6,42 +6,69 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 
-public class Dijkstra2 {
-
+public class Dijkstra 
+{
 	private static final Graph.Edge[] GRAPH = {
+			
+			new Graph.Edge("a", "b", 7),
+			new Graph.Edge("a", "c", 9),
+			new Graph.Edge("a", "f", 14),
+			new Graph.Edge("b", "c", 3),
+			new Graph.Edge("b", "f", 1),
+			new Graph.Edge("b", "d", 19),
+			new Graph.Edge("c", "d", 3),
+			new Graph.Edge("f", "b", 4),
+			new Graph.Edge("d", "e", 3),
+			//new Graph.Edge("e", "f", 10),
+		};
+		private static final String START = "a";
+		private static final String END = "e";
 		
-		new Graph.Edge("a", "b", 7),
-		new Graph.Edge("a", "c", 9),
-		new Graph.Edge("a", "f", 14),
-		new Graph.Edge("b", "c", 3),
-		new Graph.Edge("b", "f", 1),
-		new Graph.Edge("b", "d", 19),
-		new Graph.Edge("c", "d", 3),
-		new Graph.Edge("f", "b", 4),
-		new Graph.Edge("d", "e", 3),
-		//new Graph.Edge("e", "f", 10),
-	};
-	private static final String START = "a";
-	private static final String END = "e";
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			
+			Graph g = new Graph(GRAPH);
+			g.dijkstra(START);
+			g.printPath(END);
+		}
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		Graph g = new Graph(GRAPH);
-		g.dijkstra(START);
-		g.printPath(END);
-	}
-
+	
 }
 
-class Graph {
+class Graph
+{
 	private final Map<String, Vertex> graph;
+	
+	public Graph(Graph.Edge[] edges)
+	{
+		graph = new HashMap<>(edges.length);
+		
+		for (Edge edge : edges)
+		{
+			if (!graph.containsKey(edge.v1))
+			{
+				graph.put(edge.v1, new Vertex(edge.v1));
+			}
 			
-	public static class Edge{
+			if (!graph.containsKey(edge.v2))
+			{
+				graph.put(edge.v2, new Vertex(edge.v2));
+			}
+		}
+		
+		for ( Edge edge : edges)
+		{
+			graph.get(edge.v1).neighbours.put(graph.get(edge.v2), edge.dist);
+		}
+	}
+	
+	public static class Edge
+	{
 		public final String v1, v2;
 		public final int dist;
 		
-		public Edge(String v1, String v2, int dist) {
+		public Edge(String v1, String v2, int dist)
+		{
 			this.v1 = v1;
 			this.v2 = v2;
 			this.dist = dist;
@@ -51,14 +78,15 @@ class Graph {
 	public static class Vertex implements Comparable<Vertex>
 	{
 		public final String name;
-		public int dist = Integer.MAX_VALUE;
-		public Vertex previous = null;
+		public int dist;
+		public Vertex previous;
 		public final Map<Vertex, Integer> neighbours = new HashMap<>();
 		
 		public Vertex(String name)
 		{
 			this.name = name;
 		}
+		
 		public void printPath()
 		{
 			if (this == this.previous) {
@@ -74,14 +102,15 @@ class Graph {
 		}
 		
 		@Override
-		public int compareTo(Vertex other) {
-			if (dist == other.dist) return name.compareTo(other.name);
-			
-			return Integer.compare(dist,  other.dist);
+		public int compareTo(Vertex o) 
+		{
+			if (dist == o.dist) return this.name.compareTo(o.name);
+			return Integer.compare(this.dist, o.dist);
 		}
-		
+
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object obj) 
+		{
 			if ( this == obj) return true;
 			if ( obj == null || getClass() != obj.getClass())	return false;
 			if ( !super.equals(obj))	return false;
@@ -95,9 +124,10 @@ class Graph {
 			
 			return true;
 		}
-		
+
 		@Override
-		public int hashCode() {
+		public int hashCode()
+		{
 			int result = super.hashCode();
 			result = 31 * result + (name != null ? name.hashCode() : 0);
 			result = 31 * result + dist;
@@ -110,35 +140,21 @@ class Graph {
 		public String toString() {
 			return "(" + name + ", " + dist + ")";
 		}
+		
 	}
 	
-	public Graph(Edge[] edges) {
-		graph = new HashMap<>(edges.length);
-		
-		for(Edge e : edges) {
-			if (!graph.containsKey(e.v1)) {
-				graph.put(e.v1, new Vertex(e.v1));
-			}
-			
-			if (!graph.containsKey(e.v2)) {
-				graph.put(e.v2, new Vertex(e.v2));
-			}
-		}
-		
-		for(Edge e : edges) {
-			graph.get(e.v1).neighbours.put(graph.get(e.v2), e.dist);
-		}
-	}
-	
-	public void dijkstra(String startName) {
-		if (!graph.containsKey(startName)) {
+	public void dijkstra(String startName)
+	{
+		if (!graph.containsKey(startName))
+		{
 			return;
 		}
 		
 		final Vertex source = graph.get(startName);
 		NavigableSet<Vertex> q = new TreeSet<>();
 		
-		for (Vertex v : graph.values()) {
+		for (Vertex v : graph.values())
+		{
 			v.previous = v == source ? source : null;
 			v.dist = v == source ? 0 : Integer.MAX_VALUE;
 			q.add(v);
@@ -147,20 +163,26 @@ class Graph {
 		dijkstra(q);
 	}
 	
-	public void dijkstra(NavigableSet<Vertex> q) {
+	public void dijkstra(NavigableSet<Vertex> q)
+	{
 		Vertex u, v;
 		
-		while(!q.isEmpty()) {
+		while(!q.isEmpty())
+		{
 			u = q.pollFirst();
-			if (u.dist == Integer.MAX_VALUE) {
+			if (u.dist == Integer.MAX_VALUE)
+			{
 				break;
 			}
 			
-			for (Map.Entry<Vertex, Integer> a : u.neighbours.entrySet()) {
+			for (Map.Entry<Vertex, Integer> a : u.neighbours.entrySet())
+			{
 				v = a.getKey();
 				
 				final int alternateDist = u.dist + a.getValue();
-				if (alternateDist < v.dist) {
+				
+				if (alternateDist < v.dist)
+				{
 					q.remove(v);
 					v.dist = alternateDist;
 					v.previous = u;
@@ -168,8 +190,9 @@ class Graph {
 				}
 			}
 		}
+		
+		
 	}
-
 	
 	public void printPath(String endName) {
 		if (!graph.containsKey(endName)) {
@@ -179,7 +202,4 @@ class Graph {
 		graph.get(endName).printPath();
 		System.out.println();
 	}
-	
 }
-
-
