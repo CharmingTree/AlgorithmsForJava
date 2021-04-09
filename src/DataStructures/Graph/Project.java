@@ -88,7 +88,7 @@ class ProjectManager {
 		if (!project.getDependencies().isEmpty()) {
 			for (Project p : project.getDependencies()) {
 				buildOrder(p, ordered);
-			}
+			} 
 		}
 		if (project.getMarked() == false) {
 			project.setMarked(true);
