@@ -186,17 +186,6 @@ class Queue {
 			head = head.next;
 			return resultData.data;
 		}
-//		else {
-//			Node prev = null;
-//			Node temp = head;
-//			while (temp.next != null) {
-//				prev = temp;
-//				temp = temp.next;
-//			}
-//			
-//			prev.next = null;
-//			return temp.data;
-//		}
 	}
 	
 	public Object peek() {
@@ -335,6 +324,29 @@ class Graph {
 	void visit(Node n) {
 		System.out.print(n.data + " ");
 	}
+	
+	public boolean search(int i1, int i2) {
+		return search(nodes[i1], nodes[i2]);
+	}
+	
+	public boolean search(Node start, Node end) {
+		Queue queue = new Queue();
+		queue.enqueue(start);
+		while (!queue.isEmpty()) {
+			Node root = (Node) queue.dequene();
+			if (root == end) {
+				return true;
+			}
+			for (Node n : root.adjacent) {
+				if (n.marked == false ) {
+					n.marked = true;
+					queue.enqueue(n);
+				}
+			}
+		}
+		
+		return false;
+	}
 }
 
 public class BFS {
@@ -368,7 +380,7 @@ public class BFS {
 		myQ.dequene();
 
 		
-		System.out.println(myQ.toString());
+		//System.out.println(myQ.toString());
 		/* ============================
 		    0
 		   /
@@ -391,15 +403,17 @@ public class BFS {
 		g.addEdge(2, 3);
 		g.addEdge(3, 4);
 		g.addEdge(3, 5);
-		g.addEdge(5, 6);
 		g.addEdge(5, 7);
+		g.addEdge(5, 5);
 		g.addEdge(6, 8);
 		
-		System.out.println(g.toString());
+		//System.out.println(g.toString());
 		
 		//g.dfs();
-		g.bfs();
+		//g.bfs();
 		//g.dfsR();
+		
+		System.out.println(g.search(0, 8));
 	}
 	
 }
