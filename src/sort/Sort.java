@@ -28,12 +28,12 @@ public abstract class Sort
 		{
 			if (arr[i-1] > arr[i])
 			{
-				System.out.println("정렬되지 않았습니다.");
+				System.out.println("fail");
 				break;
 			}
 			if( i == arr.length-1 )
 			{
-				System.out.println("정렬되었습니다.");
+				System.out.println("success");
 			}
 		}
 	}

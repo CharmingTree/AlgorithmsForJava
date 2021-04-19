@@ -73,6 +73,20 @@ public class Trie {
 		return word.matches("^[a-z]+$");
 	}
 	
+	public static void printTrie(TrieNode n) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < n.child.length; i++) {
+			if (n.child[i] != null) {
+				char t = (char)('a' + i);
+				sb.append(t);
+				printTrie(n.child[i]);
+			}
+		}
+		System.out.println(sb.toString());
+		
+	}
+	
 	public static void main(String[] args) {
 		Trie obj = new Trie();
 		String word; 
@@ -89,6 +103,7 @@ public class Trie {
 						word = scan.next();
 						if (isValid(word))	obj.insert(word);
 						else	sop("Invalid string: allowed only a-z");
+						printTrie(obj.root);
 						break;
 					case 2:
 						word = scan.next();
