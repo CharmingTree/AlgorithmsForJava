@@ -46,6 +46,24 @@ public class behaviorPrameterization {
 		
 		return result;
 	} 
+	
+	// 람다 표현식은 구현 클래스가 하나만 존재 해야 한다. 
+	// 즉, 함수형 인터페이스라고 하며, 오직 하나의 추상 메소드만 지정 한다.
+	interface LamdaTest {
+		public void test(String msg);
+	}
+	
+	interface LamdaTest2 {
+		public void test(String a, String b);
+	}
+	
+	public static void lamdaTestFunc(LamdaTest t) {
+		t.test("hello");
+	}
+	
+	public static void lamdaTestFunc2(LamdaTest2 t) {
+		t.test("hello", "lamda");
+	}
 
 	public static void main(String[] args) {
 		List<Apple> inventory = Arrays.asList(new Apple("a", 80, Apple.Color.GREEEN),
@@ -84,6 +102,12 @@ public class behaviorPrameterization {
 		
 		inventory.sort((a1, a2)->a1.getWeight().compareTo(a2.getWeight()));
 		System.out.println(inventory);
+		
+		lamdaTestFunc((a)->{System.out.println(a);});
+		lamdaTestFunc((a)->System.out.println(a));
+		lamdaTestFunc(a->{System.out.println(a);});
+		lamdaTestFunc2((a,b)->{});
+		
 	}
 
 }
