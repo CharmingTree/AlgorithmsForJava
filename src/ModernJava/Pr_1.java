@@ -2,7 +2,7 @@ package ModernJava;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
 
