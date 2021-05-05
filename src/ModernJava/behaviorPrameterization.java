@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 interface ApplePredicate {
 	public boolean test(Apple apple);
 }
@@ -68,7 +70,7 @@ public class behaviorPrameterization {
 	public static void main(String[] args) {
 		List<Apple> inventory = Arrays.asList(new Apple("a", 80, Apple.Color.GREEEN),
 											  new Apple("b", 155, Apple.Color.GREEEN),
-											  new Apple("b", 155, Apple.Color.BLUE),
+											  new Apple("u", 155, Apple.Color.BLUE),
 											  new Apple("c", 120, Apple.Color.RED));
 		
 		
@@ -100,8 +102,22 @@ public class behaviorPrameterization {
 		
 		// java.util.Comparator
 		
-		inventory.sort((a1, a2)->a1.getWeight().compareTo(a2.getWeight()));
+		//inventory.sort((a1, a2)->a1.getWeight().compareTo(a2.getWeight()));
+		
+		// 메소드 참조 방식 : java.util.Comparator.comparing 임포트 해야함.
+		inventory.sort(comparing(Apple::getWeight));
 		System.out.println(inventory);
+
+		// 디폴트 메소드 이용해서 역정렬 
+		// 함수 인터페이스는 한가지의 추상 메서드만 존재할 수 있기때문에 추가로 제공한다는것 자체가 정의에 어긋나지 않는가? 라고 생각할 수 있다. 
+		// 하지만 디폴트 메소드는 추상 메소드가 아니므로 함수형 인터페이스의 정의를 벗어나지 않는다. 
+		inventory.sort(comparing(Apple::getWeight).reversed());
+		System.out.println(inventory);
+		
+		
+		inventory.sort(comparing(Apple::getWeight).reversed().thenComparing(Apple::getName));
+		System.out.println(inventory);
+		
 		
 		lamdaTestFunc((a)->{System.out.println(a);});
 		lamdaTestFunc((a)->System.out.println(a));

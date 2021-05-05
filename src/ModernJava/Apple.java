@@ -4,7 +4,7 @@ interface ApplePrint {
 	String accept(Apple a);
 }
 
-public class Apple{
+public class Apple {
 	
 	private final String name;
 	private final int weight;
