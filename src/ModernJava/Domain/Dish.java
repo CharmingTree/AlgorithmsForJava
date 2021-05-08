@@ -1,4 +1,4 @@
-package ModernJava;
+package ModernJava.Domain;
 
 public class Dish {
 	private final String name;
@@ -32,7 +32,7 @@ public class Dish {
 	@Override
 	public String toString() 
 	{
-		return name+" ob";
+		return this.name;
 	}
 	public enum Type { MEAT, FISH, OTHER }
 	
