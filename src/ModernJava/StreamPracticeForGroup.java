@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import ModernJava.Domain.Dish;
 import ModernJava.Domain.Dish.Type;
@@ -192,7 +194,55 @@ public class StreamPracticeForGroup {
 		
 		System.out.println(mostCaloricByType2);
 		
+		// 13. 각 요리형식에 존재하는 모든 칼로리 레벨 
+		Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType = menu.stream().collect(groupingBy(Dish::getType, mapping(dish -> {
+			if ( dish.getCalories() <= 400) return CaloricLevel.DIET;
+			else if ( dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+			else return CaloricLevel.FAT;
+		}, toSet())));
+		
+		System.out.println(caloricLevelsByType);
+		
+		// 13-2. Set 타입 지정 
+		Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType2 = menu.stream().collect(groupingBy(Dish::getType, mapping(dish -> {
+			if ( dish.getCalories() <= 400) return CaloricLevel.DIET;
+			else if ( dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+			else return CaloricLevel.FAT;
+		}, toCollection(HashSet::new))));
+		
+		System.out.println(caloricLevelsByType2);
+
+		// 14. 분할 함수 :: 분할 함수는 프레디케이트를 분류 함수로 사용하는 특수한 그룹화 기능이고, 불리언을 반환하기 때문에 맵의 key는 최대 두개의 그룹으로 분류된다 (true, false)
+		// 채식주의자와 아닌 자로 나누기
+		Map<Boolean, List<Dish>> partitionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+
+		System.out.println(partitionedMenu);
+
+		Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishsByType = menu.stream().collect(
+				partitioningBy(Dish::isVegetarian,
+						groupingBy(Dish::getType))
+		);
+
+		System.out.println(vegetarianDishsByType);
+
+		Map<Boolean, Dish> mostCaloricPartitionedByVegetarian = menu.stream().collect(
+				partitioningBy(Dish::isVegetarian,
+						collectingAndThen(maxBy(Comparator.comparing(Dish::getCalories)), Optional::get))
+		);
+
+		System.out.println(mostCaloricPartitionedByVegetarian);
+
+		// 15. 소수 판별
+		Map<Boolean, List<Integer>> partitionPrimes = IntStream.rangeClosed(2, 1000).boxed().collect(
+				partitioningBy(candidate -> isPrime(candidate))
+		);
+
+		System.out.println(partitionPrimes);
+
 	}
 	
-
+	public static boolean isPrime(int candidate) {
+		final int candidateRoot = (int) Math.sqrt((double) candidate);
+		return IntStream.range(2, candidateRoot).noneMatch(i -> candidate % i == 0);
+	}
 }
