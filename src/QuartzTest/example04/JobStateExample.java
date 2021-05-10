@@ -6,6 +6,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.quartz.DateBuilder.nextGivenMinuteDate;
@@ -19,6 +20,8 @@ public class JobStateExample {
         Logger logger = LoggerFactory.getLogger(JobStateExample.class);
 
         logger.info("init");
+
+
 
         SchedulerFactory sf = new StdSchedulerFactory();
         Scheduler sched = sf.getScheduler();
