@@ -37,7 +37,7 @@ public class ColorJob implements Job {
 
         count++;
         data.put(EXECUTION_COUNT, count);
-
+        // 같은 job id를 가지더라도, 매번 실행될때 마다 새로운 인스턴스가 생성되기 때문에 결과적으로 counter는 항상 1로 찍힌다.
         counter++;
     }
 }
