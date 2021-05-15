@@ -3,11 +3,10 @@ package DataStructures.BFS;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/* 너비 우선 탐색 Test */
 public class Graph 
 {
 	private int V;
-	private LinkedList<Integer> adj[];
+	private LinkedList[] adj;
 	
 	public Graph(int v) 
 	{
