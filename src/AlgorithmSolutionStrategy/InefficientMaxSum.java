@@ -4,6 +4,22 @@ public class InefficientMaxSum {
 
     public static int MIN = Integer.MIN_VALUE;
 
+    public int fastestMaxSum(int[] arr) {
+        long startTime = System.nanoTime();
+        int N = arr.length;
+        int ret = MIN;
+        int psum = 0;
+
+        for (int i = 0; i < N; i++) {
+            psum = Math.max(psum, 0) + arr[i];
+            ret = Math.max(psum, ret);
+        }
+
+        long endTime = System.nanoTime();
+        System.out.println("fastestMaxSum ExcuteTime : " + (endTime-startTime) + " ns");
+        return ret;
+    }
+
     public int fastMaxSum(int[] arr, int lo, int hi) {
         if (lo == hi)
             return arr[lo];
@@ -74,5 +90,11 @@ public class InefficientMaxSum {
         System.out.println(obj.fastMaxSum(new int[] {-7, 4, -3, 6, 3, -8, 3, 4}, 0, 7));
         long endTime = System.nanoTime();
         System.out.println("fastMaxSum ExcuteTime : " + (endTime-startTime) + " ns");
+
+        System.out.println(obj.fastestMaxSum(new int[] {-7, 4, -3, 6, 3, -8, 3, 4}));
+
+        System.out.println(obj.fastestMaxSum(new int[] {-7, -4, -3, -6, -3, -8, -3, -4}));
+
+        //System.out.println(obj.fastMaxSum(new int[] {-99, -99, 100, 100, 100, 100, -99, -99}, 0, 7));
     }
 }
