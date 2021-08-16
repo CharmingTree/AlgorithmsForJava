@@ -6,6 +6,8 @@ public class Picnic {
 
     public int countpairings(boolean[] taken) {
         int firstFree = -1;
+
+        // 학생수 n 범위 외의 친구 쌍은 없는걸로 가정한다.
         for (int i = 0; i < n; i++) {
             if (!taken[i]) {
                 firstFree = i;
