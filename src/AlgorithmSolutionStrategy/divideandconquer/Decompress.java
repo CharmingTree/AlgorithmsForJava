@@ -4,13 +4,15 @@ import java.util.Iterator;
 
 public class Decompress {
 
-    static char[][] decompressed = new char[20][20];
+    static char[][] decompressed = new char[16][16];
+    int it = 0;
 
-    void decompress(String s, int it, int y, int x, int size) {
+    void decompress(String s, int y, int x, int size) {
 
         if (s.length() <= it)
             return;
         char head = s.charAt(it);
+        it++;
         System.out.println(head +" "+it);
 
 
@@ -23,11 +25,24 @@ public class Decompress {
         }
         else {
             int half = size / 2;
-            decompress(s, it+1, y, x, half);
-            decompress(s, it+2, y, x+half, half);
-            decompress(s, it+3, y+half, x, half);
-            decompress(s, it+4, y+half, x+half, half);
+            decompress(s, y, x, half);
+            decompress(s, y, x+half, half);
+            decompress(s, y+half, x, half);
+            decompress(s, y+half, x+half, half);
         }
+    }
+
+    String reserve(String s) {
+        char head = s.charAt(it);
+        ++it;
+        if(head == 'b' || head == 'w')
+            return String.valueOf(head);
+        String upperLeft = reserve(s);
+        String upperRight = reserve(s);
+        String lowerLeft = reserve(s);
+        String lowerRight = reserve(s);
+
+        return "x" + lowerLeft + lowerRight + upperLeft + upperRight;
     }
 
     public static void main(String[] args) {
@@ -44,9 +59,9 @@ public class Decompress {
         System.out.println();
         System.out.println();
 
-        String s ="xwbbw";
+        String s ="xxwwwbxwxwbbbwwxxxwwbbbwwwwbb";
 
-        decompress.decompress(s, 0, 0, 0 , decompressed.length);
+        decompress.decompress(s, 0, 0 , decompressed.length);
 
         for (int i = 0; i < decompressed.length; i++) {
             for ( int j = 0; j < decompressed[i].length; j++) {
@@ -54,5 +69,9 @@ public class Decompress {
             }
             System.out.println();
         }
+
+        decompress.it = 0;
+
+        System.out.println(decompress.reserve("xbwxwbbwb"));
     }
 }

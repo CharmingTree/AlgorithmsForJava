@@ -2,8 +2,8 @@ package AlgorithmSolutionStrategy;
 
 public class Boggle {
 
-    final static int[] dx = {-1, -1, -1, 1, 1, 1, 0, 0};
-    final static int[] dy = {-1, 0, 1, -1, 0, 1, -1, 1};
+    final static int[] dx = {-1, -1, -1,  1, 1, 1,  0, 0};
+    final static int[] dy = {-1,  0,  1, -1, 0, 1, -1, 1};
     final static char[][] board = {
         {'U', 'R', 'L', 'P', 'M'},
         {'X', 'P', 'R', 'E', 'T'},
