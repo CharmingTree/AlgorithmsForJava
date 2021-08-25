@@ -123,5 +123,7 @@ public class DynamicBeat extends JFrame {
         g.drawImage(introBackground, 0, 0, null);
         super.paintComponents(g);
         this.repaint();
+
+
     }
 }
