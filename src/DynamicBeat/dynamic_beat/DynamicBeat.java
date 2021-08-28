@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class DynamicBeat extends JFrame {
@@ -20,9 +21,10 @@ public class DynamicBeat extends JFrame {
 
     //private Image introBackground;
     private Image background = new ImageIcon(dyMain.class.getResource("../../images/intro_background.jpg")).getImage();
-    private Image selectedImage = new ImageIcon(dyMain.class.getResource("../../images/start_img_evening_sky.png")).getImage();
 
-    private Image titleImage = new ImageIcon(dyMain.class.getResource("../../images/evening_sky_title_img.png")).getImage();
+    //private Image selectedImage = new ImageIcon(dyMain.class.getResource("../../images/start_img_evening_sky.png")).getImage();
+
+    //private Image titleImage = new ImageIcon(dyMain.class.getResource("../../images/evening_sky_title_img.png")).getImage();
 
     private JLabel menuBar = new JLabel(new ImageIcon(dyMain.class.getResource("../../images/menuBar.png")));
 
@@ -54,6 +56,13 @@ public class DynamicBeat extends JFrame {
 
     private boolean isMainScreen = false;
 
+    private java.util.List<Track> trackList = new ArrayList<>();
+
+    private Image selectedImage;
+    private Image titleImage;
+    private Music selectedMusic;
+    private int nowSelected = 0;
+
     public DynamicBeat() {
 
         logger = LoggerFactory.getLogger(this.getClass());
@@ -67,6 +76,27 @@ public class DynamicBeat extends JFrame {
         setBackground(new Color(0,0,0,0));
         //setIconImage(introBackground);
         setLayout(null);
+
+        Music introMusic = new Music("spell.mp3", true);
+        introMusic.start();
+
+        trackList.add(
+                new Track("evening_sky_title_img.png",
+                            "start_img_evening_sky.png",
+                            "game_img_evening_sky.jpg",
+                            "evening_sky_highlight.mp3",
+                                    "evening_sky.mp3")
+        );
+
+        trackList.add(
+                new Track("it_was_love_title_img.png",
+                        "start_img_it_was_love.jpg",
+                        "game_img_it_was_love.jpg",
+                        "it_was_love_highlight.mp3",
+                        "it_was_love.mp3")
+        );
+
+
 
         JPanel panel = new JPanel(){
             public void paintComponent(Graphics g) {
@@ -144,11 +174,18 @@ public class DynamicBeat extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
+                introMusic.close();
+
+                // 메인메뉴 진입시 첫번쨰 노래
+                //Music selectedMusic = new Music("evening_sky_highlight.mp3", true);
+                //selectedMusic.start();
+                selectTrack(0);
+
                 startButton.setVisible(false);
                 stopButton.setVisible(false);
                 leftButton.setVisible(true);
                 rightButton.setVisible(true);
-                background = new ImageIcon(dyMain.class.getResource("../../images/main_background.jpg")).getImage();
+                background = new ImageIcon(dyMain.class.getResource("../../images/main_background2.jpg")).getImage();
                 isMainScreen = true;
             }
         });
@@ -204,7 +241,7 @@ public class DynamicBeat extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                //
+                selectLeft();
             }
         });
         panel.add(leftButton);
@@ -232,6 +269,7 @@ public class DynamicBeat extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 //
+                selectRight();
             }
         });
         panel.add(rightButton);
@@ -242,8 +280,7 @@ public class DynamicBeat extends JFrame {
 
         //introBackground = new ImageIcon(dyMain.class.getResource("../../images/intro_background.jpg")).getImage();
 
-        Music introMusic = new Music("spell.mp3", true);
-        introMusic.start();
+
     }
 
     public void paint(Graphics g) {
@@ -267,5 +304,34 @@ public class DynamicBeat extends JFrame {
         this.repaint();
 
 
+    }
+
+    public void selectTrack(int nowSelected) {
+        if (selectedMusic != null)
+            selectedMusic.close();
+
+        titleImage = new ImageIcon(dyMain.class.getResource("../../images/" + trackList.get(nowSelected).getTitleImage())).getImage();
+        selectedImage = new ImageIcon(dyMain.class.getResource("../../images/" + trackList.get(nowSelected).getStartImage())).getImage();
+        selectedMusic = new Music(trackList.get(nowSelected).getStartMusic(), true);
+        selectedMusic.start();
+
+    }
+
+    public void selectLeft() {
+        if (nowSelected == 0)
+            nowSelected = trackList.size()-1;
+        else
+            nowSelected--;
+
+        selectTrack(nowSelected);
+    }
+
+    public void selectRight() {
+        if (nowSelected == trackList.size()-1)
+            nowSelected = 0;
+        else
+            nowSelected++;
+
+        selectTrack(nowSelected);
     }
 }

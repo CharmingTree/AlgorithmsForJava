@@ -79,50 +79,136 @@ public class LargestMakeNum {
         return result;
     }
 
+    String rightFillStr(String s, int po) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(s);
+        for (int i = s.length(); i < po; i++) {
+            sb.append("0");
+        }
+
+        return sb.toString();
+    }
 
     public String solution3(int[] numbers) {
         String answer = "";
 
-        List<List<Integer>> completeList = new ArrayList<>();
         List<List<Integer>> unComplectList = new ArrayList<>();
 
-        for (int i = 0; i <= 10; i++) {
-            completeList.add(new ArrayList<>());
+        for (int i = 0; i <= 9; i++) {
             unComplectList.add(new ArrayList<>());
         }
 
         for (int num : numbers) {
             String temp = String.valueOf(num);
-
-            if (temp.length() == 1)
-                completeList.get(num).add(num);
-            else
-                unComplectList.get(Character.getNumericValue(temp.charAt(0))).add(num);
+            unComplectList.get(Character.getNumericValue(temp.charAt(0))).add(num);
         }
 
-        for (int i = 1; i <= 10; i++) {
-            Collections.sort(unComplectList.get(i));
-            Collections.reverse(unComplectList.get(i));
-            int temp = unComplectList.get(i).isEmpty() ? 0 : String.valueOf(unComplectList.get(i).get(0)).length();
-            for (int j = 2; j <= temp; j++) {
-                for (int k = 0; k < unComplectList.get(i).size(); k++) {
-                    int curElementLength = String.valueOf(unComplectList.get(i).get(k)).length();
-                    if ( j == curElementLength ) {
-                        completeList.get(i).add(unComplectList.get(i).get(k));
-                    }
-                }
+        Comparator<Integer> cp2 = (a,b) -> {
+            String tA = String.valueOf(a);
+            String tB = String.valueOf(b);
+
+            Integer rA = Integer.parseInt(tA+tB);
+            Integer rB = Integer.parseInt(tB+tA);
+
+            Integer result = rA.compareTo(rB);
+            return result > 0 ? -1 : result < 0 ? 1 : 0;
+        };
+
+        Comparator<Integer> cp = (a,b) -> {
+            String tA = String.valueOf(a);
+            String tB = String.valueOf(b);
+
+            if (tA.length() > tB.length()) {
+                tB = rightFillStr(tB, tA.length());
+                Integer rA = Integer.parseInt(tA);
+                Integer rB = Integer.parseInt(tB);
+                int temp = rA.compareTo(rB);
+                //return  temp == 0 ? -1 : temp;
+                return  temp == 0 ? 1 : temp * -1;
+
+            }
+            else if (tA.length() < tB.length())  {
+                tA = rightFillStr(tA, tB.length());
+                Integer rA = Integer.parseInt(tA);
+                Integer rB = Integer.parseInt(tB);
+                int temp = rA.compareTo(rB);
+                //return temp == 0 ? 1 : temp;
+                return temp == 0 ? -1 : temp * -1;
+            }
+            else {
+                Integer rA = Integer.parseInt(tA);
+                Integer rB = Integer.parseInt(tB);
+                return rA.compareTo(rB) * -1;
+            }
+
+        };
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 9; i >= 0; i--) {
+            //System.out.println(unComplectList.get(i));
+            //Collections.sort(unComplectList.get(i), cp);
+            Collections.sort(unComplectList.get(i), cp2);
+            //System.out.println(unComplectList.get(i));
+            //Collections.reverse(unComplectList.get(i));
+            for (int j = 0; j < unComplectList.get(i).size(); j++) {
+                sb.append(unComplectList.get(i).get(j));
             }
         }
-        System.out.println(completeList);
-        System.out.println(unComplectList);
-        return answer;
+
+
+        //return sb.toString().isEmpty() ? "0" : sb.toString();
+        return sb.toString().startsWith("0") ? "0" : sb.toString();
+    }
+
+    /*
+    [정리된 코드]
+    생각해보니 앞자리 별로 버켓을 나눌 필요가 없음;;
+    * */
+    public String solution4(int[] numbers) {
+        String answer = "";
+
+        List<Integer> unComplectList = new ArrayList<>();
+
+        for (int num : numbers) {
+            unComplectList.add(num);
+        }
+
+        Comparator<Integer> cp = (a,b) -> {
+            String tA = String.valueOf(a);
+            String tB = String.valueOf(b);
+
+            Integer rA = Integer.parseInt(tA+tB);
+            Integer rB = Integer.parseInt(tB+tA);
+
+            Integer result = rA.compareTo(rB);
+            return result > 0 ? -1 : result < 0 ? 1 : 0;
+        };
+
+        Collections.sort(unComplectList, cp);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < unComplectList.size(); i++) {
+            sb.append(unComplectList.get(i));
+        }
+
+
+        //return sb.toString().isEmpty() ? "0" : sb.toString();
+        return sb.toString().startsWith("0") ? "0" : sb.toString();
     }
 
 
     public static void main(String[] args) {
         LargestMakeNum largestMakeNum = new LargestMakeNum();
 
-        System.out.println(largestMakeNum.solution3(new int[] {6, 10, 2, 9, 99, 98, 91, 999, 988, 9001}));
+        System.out.println(largestMakeNum.solution4(new int[] {6, 10, 2, 9, 99, 98, 91, 999, 988, 9001}));
+        System.out.println(largestMakeNum.solution4(new int[] {1,10,9}));
+        //System.out.println(largestMakeNum.solution3(new int[] {10, 101, 1001, 11}));
+        // 101101001
+        // 101100110
+        //System.out.println(largestMakeNum.solution3(new int[] {3, 30, 34, 5, 9}));
+        //System.out.println(largestMakeNum.rightFillStr("12", 3));
+
 
     }
 }
