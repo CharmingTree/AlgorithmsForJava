@@ -18,13 +18,12 @@ public class DynamicBeat extends JFrame {
 
     private Image screenImage;
     private Graphics screenGraphic;
-
-    //private Image introBackground;
     private Image background = new ImageIcon(dyMain.class.getResource("../../images/intro_background.jpg")).getImage();
-
-    //private Image selectedImage = new ImageIcon(dyMain.class.getResource("../../images/start_img_evening_sky.png")).getImage();
-
-    //private Image titleImage = new ImageIcon(dyMain.class.getResource("../../images/evening_sky_title_img.png")).getImage();
+    private Image gameInfoImg = new ImageIcon(dyMain.class.getResource("../../images/gameInfo.png")).getImage();
+    private Image judgementLineImg = new ImageIcon(dyMain.class.getResource("../../images/judgementLine.png")).getImage();
+    private Image noteRouteImg = new ImageIcon(dyMain.class.getResource("../../images/noteRoute.png")).getImage();
+    private Image noteRouteLineImg = new ImageIcon(dyMain.class.getResource("../../images/noteRouteLine.png")).getImage();
+    private Image beatNoteImg = new ImageIcon(dyMain.class.getResource("../../images/beatNote.png")).getImage();
 
     private JLabel menuBar = new JLabel(new ImageIcon(dyMain.class.getResource("../../images/menuBar.png")));
 
@@ -50,6 +49,8 @@ public class DynamicBeat extends JFrame {
     private ImageIcon hardButtonUnEnteredImage = new ImageIcon(dyMain.class.getResource("../../images/hardMode_unEntered.png"));
     private ImageIcon hardButtonEnteredImage = new ImageIcon(dyMain.class.getResource("../../images/hardMode_entered.png"));
 
+    private ImageIcon backButtonUnEnteredImage = new ImageIcon(dyMain.class.getResource("../../images/backBtn_unEntered_img.png"));
+    private ImageIcon backButtonEnteredImage = new ImageIcon(dyMain.class.getResource("../../images/backBtn_entered_img.png"));
 
     private JButton exitButton = new JButton(exitButtonUnEnteredImage);
     private JButton startButton = new JButton(startButtonUnEnteredImage);
@@ -60,15 +61,19 @@ public class DynamicBeat extends JFrame {
     private JButton easyModeButton = new JButton(easyButtonUnEnteredImage);
     private JButton hardModeButton = new JButton(hardButtonUnEnteredImage);
 
+    private JButton backButton = new JButton(backButtonUnEnteredImage);
+
     private int mouseX, mouseY;
 
     private boolean isMainScreen = false;
+    private boolean isGameScreen = false;
 
     private java.util.List<Track> trackList = new ArrayList<>();
 
     private Image selectedImage;
     private Image titleImage;
     private Music selectedMusic;
+    private Music introMusic = new Music("spell.mp3", true);
     private int nowSelected = 0;
 
     public DynamicBeat() {
@@ -82,14 +87,14 @@ public class DynamicBeat extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setBackground(new Color(0,0,0,0));
-        //setIconImage(introBackground);
         setLayout(null);
 
-        Music introMusic = new Music("spell.mp3", true);
+
         introMusic.start();
 
         trackList.add(
-                new Track("evening_sky_title_img.png",
+                new Track("Alile - Evening Sky",
+                        "evening_sky_title_img.png",
                             "start_img_evening_sky.png",
                             "game_img_evening_sky.jpg",
                             "evening_sky_highlight.mp3",
@@ -97,7 +102,8 @@ public class DynamicBeat extends JFrame {
         );
 
         trackList.add(
-                new Track("it_was_love_title_img.png",
+                new Track("Luna - It was Love",
+                        "it_was_love_title_img.png",
                         "start_img_it_was_love.jpg",
                         "game_img_it_was_love.jpg",
                         "it_was_love_highlight.mp3",
@@ -182,24 +188,7 @@ public class DynamicBeat extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                introMusic.close();
-
-                // 메인메뉴 진입시 첫번쨰 노래
-                //Music selectedMusic = new Music("evening_sky_highlight.mp3", true);
-                //selectedMusic.start();
-                selectTrack(0);
-
-                startButton.setVisible(false);
-                stopButton.setVisible(false);
-
-                leftButton.setVisible(true);
-                rightButton.setVisible(true);
-
-                easyModeButton.setVisible(true);
-                hardModeButton.setVisible(true);
-
-                background = new ImageIcon(dyMain.class.getResource("../../images/main_background2.jpg")).getImage();
-                isMainScreen = true;
+                enterMain();
             }
         });
         panel.add(startButton);
@@ -347,6 +336,35 @@ public class DynamicBeat extends JFrame {
         setContentPane(panel);
 
 
+        backButton.setVisible(false);
+        backButton.setBounds(20, 50, 60, 60);
+        backButton.setBorderPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setFocusPainted(false);
+        backButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                backButton.setIcon(backButtonEnteredImage);
+                backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                Music buttonEnteredMusic = new Music("mouse_hover.mp3", false);
+                buttonEnteredMusic.start();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                backButton.setIcon(backButtonUnEnteredImage);
+                backButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                backMain();
+            }
+        });
+        panel.add(backButton);
+
+        setContentPane(panel);
+
 
         //introBackground = new ImageIcon(dyMain.class.getResource("../../images/intro_background.jpg")).getImage();
 
@@ -356,12 +374,12 @@ public class DynamicBeat extends JFrame {
     public void paint(Graphics g) {
         screenImage = createImage(dyMain.SCREEN_WIDTH, dyMain.SCREEN_HEIGHT);
         screenGraphic = screenImage.getGraphics();
-        screenDraw(screenGraphic);
+        screenDraw((Graphics2D)screenGraphic);
         g.drawImage(screenImage, 0, 0, null);
         //logger.info("paint");
     }
 
-    public void screenDraw(Graphics g) {
+    public void screenDraw(Graphics2D g) {
         //logger.info("repaint");
         g.drawImage(background, 0, 0, null);
         super.paintComponents(g);
@@ -371,6 +389,60 @@ public class DynamicBeat extends JFrame {
             g.drawImage(selectedImage, 340, 100, null);
             g.drawImage(titleImage, 360, 120, null);
         }
+
+        if (isGameScreen) {
+            //g.drawImage(noteRouteImg, 240, 50, null);
+
+            g.drawImage(noteRouteImg,228,30, 100, 763, null);
+            g.drawImage(noteRouteImg,332,30, 100, 763, null);
+            g.drawImage(noteRouteImg,436,30, 100, 763, null);
+            g.drawImage(noteRouteImg,540,30, 100, 763, null);
+            g.drawImage(noteRouteImg,640,30, 100, 763, null);
+            g.drawImage(noteRouteImg,744,30, 100, 763, null);
+            g.drawImage(noteRouteImg,848,30, 100, 763, null);
+            g.drawImage(noteRouteImg,952,30, 100, 763, null);
+
+            g.drawImage(noteRouteLineImg, 224, 30, null);
+            g.drawImage(noteRouteLineImg, 328, 30, null);
+            g.drawImage(noteRouteLineImg, 432, 30, null);
+            g.drawImage(noteRouteLineImg, 536, 30, null);
+            g.drawImage(noteRouteLineImg, 740, 30, null);
+            g.drawImage(noteRouteLineImg, 844, 30, null);
+            g.drawImage(noteRouteLineImg, 948, 30, null);
+            g.drawImage(noteRouteLineImg, 1052, 30, null);
+
+            g.drawImage(beatNoteImg, 228, 120, null);
+            g.drawImage(beatNoteImg, 332, 580, null);
+            g.drawImage(beatNoteImg, 436, 500, null);
+            g.drawImage(beatNoteImg, 540, 340, null);
+            g.drawImage(beatNoteImg, 640, 340, null);
+            g.drawImage(beatNoteImg, 744, 325, null);
+            g.drawImage(beatNoteImg, 848, 305, null);
+            g.drawImage(beatNoteImg, 952, 305, null);
+
+            g.drawImage(gameInfoImg, 0, 793, null);
+            g.drawImage(judgementLineImg, 0, 713, null);
+
+            g.setColor(Color.white);
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            g.drawString(trackList.get(nowSelected).getMusicTitleName(), 20, 832);
+            g.drawString("Easy", 1190, 832);
+            g.setFont(new Font("Araial", Font.PLAIN, 26));
+            g.setColor(Color.darkGray);
+            g.drawString("S", 270, 745);
+            g.drawString("D", 374, 745);
+            g.drawString("F", 478, 745);
+            g.drawString("Space Bar", 580, 745);
+            g.drawString("J", 784, 745);
+            g.drawString("K", 889, 745);
+            g.drawString("L", 993, 745);
+            g.setColor(Color.lightGray);
+            g.setFont(new Font("Elephant", Font.BOLD, 30));
+            g.drawString("000000", 565, 832);
+
+        }
+
         this.repaint();
 
 
@@ -414,8 +486,38 @@ public class DynamicBeat extends JFrame {
         rightButton.setVisible(false);
         easyModeButton.setVisible(false);
         hardModeButton.setVisible(false);
-
+        backButton.setVisible(true);
+        isGameScreen = true;
         background = new ImageIcon(dyMain.class.getResource("../../images/" +trackList.get(nowSelected).getGameImage())).getImage();
 
+    }
+
+    public void backMain() {
+        isMainScreen = true;
+        leftButton.setVisible(true);
+        rightButton.setVisible(true);
+        easyModeButton.setVisible(true);
+        hardModeButton.setVisible(true);
+        backButton.setVisible(false);
+        isGameScreen = false;
+        background = new ImageIcon(dyMain.class.getResource("../../images/main_background2.jpg")).getImage();
+        selectTrack(nowSelected);
+    }
+
+    public void enterMain() {
+        background = new ImageIcon(dyMain.class.getResource("../../images/main_background2.jpg")).getImage();
+        isMainScreen = true;
+
+        startButton.setVisible(false);
+        stopButton.setVisible(false);
+
+        leftButton.setVisible(true);
+        rightButton.setVisible(true);
+
+        easyModeButton.setVisible(true);
+        hardModeButton.setVisible(true);
+
+        introMusic.close();
+        selectTrack(0);
     }
 }
