@@ -14,6 +14,7 @@ public class Picker {
 
         for ( int next = smallest; next < n; next++) {
             picked.add(next);
+            System.out.println(">> " + picked);
             pick(n, picked, toPick -1);
             picked.remove(picked.size()-1);
         }
@@ -23,6 +24,6 @@ public class Picker {
 
         Picker picker = new Picker();
 
-        picker.pick(4, new ArrayList<Integer>() , 3);
+        picker.pick(4, new ArrayList<Integer>() , 4);
     }
 }
