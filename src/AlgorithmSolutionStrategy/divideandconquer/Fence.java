@@ -51,6 +51,7 @@ public class Fence {
 
     public int solve(List<Integer> h, int left, int right, int depth) {
 
+        // deapth는 없어도된다. 로그 찍으려고 넣음
         System.out.println("Depth : " + depth);
         // base case
         if (left == right)
@@ -83,14 +84,44 @@ public class Fence {
         return ret;
     }
 
+
+    public int solve2(List<Integer> h, int left, int right) {
+
+        if (left == right)
+            return h.get(left);
+
+        int mid = (left+right) / 2;
+
+        int ret = Math.max(solve2(h, left, mid), solve2(h, mid+1, right));
+
+        int lo = mid, hi = mid+1;
+
+        int height = Math.min(h.get(lo), h.get(hi));
+        ret = Math.max(ret, height*2);
+
+        while (lo > left || hi < right) {
+            if (hi < right && (lo == left || (h.get(lo-1) < h.get(hi+1)))) {
+                height = Math.min(height, h.get(++hi));
+                ret = Math.max(ret, height * ((hi-lo)+1));
+            }
+            else {
+                height = Math.min(height, h.get(--lo));
+                ret = Math.max(ret, height * ((hi-lo)+1));
+            }
+        }
+
+        return ret;
+    }
+
     public static void main(String[] args) {
 
         Fence fence = new Fence();
 
-        //List<Integer> lst = Arrays.asList(7,1,5,9,6,7,3);
-        List<Integer> lst = Arrays.asList(7,1,1,1,1,1,1,1,1);
+        List<Integer> lst = Arrays.asList(7,1,5,9,6,7,3);
+        //List<Integer> lst = Arrays.asList(7,1,1,1,1,1,1,1,1);
         //System.out.println(fence.bruteForce(lst));
 
-        System.out.println(fence.solve(lst, 0, lst.size()-1, 0));
+        //System.out.println(fence.solve(lst, 0, lst.size()-1, 0));
+        System.out.println(fence.solve2(lst, 0, lst.size()-1));
     }
 }
