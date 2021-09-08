@@ -1,5 +1,7 @@
 package AlgorithmSolutionStrategy.dynamicprogramming;
 
+import java.util.Arrays;
+
 public class TrianglePath {
     static int[][] triangle2 = new int[][] {
             {6,0,0,0,0},
@@ -44,10 +46,37 @@ public class TrianglePath {
         return tempSum;
     }
 
+
+    static int n;
+    static int[][] cache = new int[100][100];
+
+    // 메모제이션 사용 n^2 복잡도
+    int path2(int y, int x) {
+        // base case
+        if ( y == n-1 )
+            return triangle[y][x];
+
+        // 메모제이션
+        if (cache[y][x] != -1)
+            return cache[y][x];
+
+        return cache[y][x] = Math.max(path2(y+1, x), path2(y+1, x+1)) + triangle[y][x];
+    }
+
+
+
     public static void main(String[] args) {
 
         TrianglePath trianglePath = new TrianglePath();
 
-        System.out.println(trianglePath.pathSum(0,0, 0));
+        n = triangle.length;
+
+        for (int[] ints : cache) {
+            Arrays.fill(ints, -1);
+        }
+
+        System.out.println(trianglePath.path2(0,0));
+
+        //System.out.println(trianglePath.pathSum(0,0, 0));
     }
 }
