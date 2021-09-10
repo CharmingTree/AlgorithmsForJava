@@ -50,12 +50,12 @@ public class LIS {
 
     public static void main(String[] args) {
 
-        List<Integer> lst = Arrays.asList(3,1);
+        List<Integer> lst = Arrays.asList(1,5,2,3,6,4,8,9);
 
-        //System.out.println(lis(lst));
+        System.out.println(lis(lst));
 
-        Arrays.fill(cache, -1);
-        n = S.length;
-        System.out.println(lis2(0));
+        //Arrays.fill(cache, -1);
+        //n = S.length;
+        //System.out.println(lis2(0));
     }
 }
