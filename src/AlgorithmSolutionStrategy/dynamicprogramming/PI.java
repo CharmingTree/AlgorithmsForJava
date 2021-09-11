@@ -8,8 +8,8 @@ public class PI {
     final static String N = "12673939";
 
     static int classify(int a, int b) {
-        if (a > (b-a+1))
-            return 0;
+        if (a >= (b-a+1))
+            return INF;
         String M = N.substring(a, b-a+1);
         if (M.isEmpty())
             return 0;
@@ -33,8 +33,11 @@ public class PI {
 
         // level 2
         // 숫자가 1씩 단조 증/감하는 등차수열
-        if (progressice && Math.abs(M.charAt(1)- M.charAt(0)) == 1)
+        if (progressice && Math.abs(M.charAt(1)- M.charAt(0)) == 1) {
+            System.out.println(a +" / "+b);
             return 2;
+        }
+
 
         boolean alternating = true;
 
@@ -78,5 +81,11 @@ public class PI {
         Arrays.fill(cache, -1);
 
         System.out.println(memorize(0));
+
+        for (int i = 0; i < cache.length; ++i)   {
+            System.out.print(cache[i] +" ");
+            if (((i+1) % 10) == 0)
+                System.out.println();
+        }
     }
 }
